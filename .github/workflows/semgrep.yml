@@ -1,0 +1,29 @@
+name: Semgrep SAST
+
+# Triggers the workflow on push and pull request events
+on: [push, pull_request]
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    
+    # 🚨 REQUIRED FIX: Set permissions for security-events and contents 🚨
+    # This allows the action to read your code and write the security results
+    # back to the GitHub Security tab. This is usually what causes the failure.
+    permissions:
+      contents: read 
+      security-events: write 
+      
+    steps:
+    - name: Checkout repository
+      # Checks out your repository so the runner can access the code (app.py)
+      uses: actions/checkout@v3
+      
+    - name: Run Semgrep SAST Scan
+      # Runs the Semgrep action using the official OWASP Top 10 ruleset
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: "p/owasp-top-ten"
+        # Optional: Set a specific path if you only want to scan part of the repo
+        # target: "." 
+        
